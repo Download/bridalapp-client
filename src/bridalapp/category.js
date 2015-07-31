@@ -1,10 +1,9 @@
 define(['lang/class', 'bridalapp/named'], function(Class, Named){
-	var Account = Class('Account', Named, {
+	var Category = Class('Category', Named, {
 		initialize: function($super, obj) {
 			$super(obj);
-			this.credentials = (obj && obj.credentials) || [];
 		}
 	});
 
-	return Account;
+	return Category;
 });

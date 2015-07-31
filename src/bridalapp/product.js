@@ -7,6 +7,9 @@ define(['lang/class', 'bridalapp/named'], function(Class, Named){
 			this.priceConsumerEuroCent = (obj && obj.priceConsumerEuroCent) || null;
 			this.brandId = (obj && obj.brandId) || null;
 			this.brandName = (obj && obj.brandName) || null;
+			this.categoryId = (obj && obj.categoryId) || null;
+			this.categoryName = (obj && obj.categoryName) || null;
+			this.tags = (obj && obj.tags) || null;
 		}
 	});
 	
