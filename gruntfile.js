@@ -37,7 +37,17 @@ module.exports = function(grunt) {
 					preserveLicenseComments: false,
 					generateSourceMaps: true,
 					optimize: 'uglify2',
-					//optimize: 'none',
+					uglify2: {
+						output: {
+							beautify: true,
+						},
+						beautify: {
+							semicolons: false
+						},
+						mangle: {
+							except: ['$super']
+						}
+					}					
 				}
 			}
 		}		
