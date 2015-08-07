@@ -1,4 +1,4 @@
-define(['lang/class', 'suid'], function (Class, Suid) {
+define(['bridalapp/class', 'suid'], function (Class, Suid) {
 	var Persistent = Class('Persistent', {
 		initialize: function Persistent_initialize(obj) {
 			this.id = (obj && obj.id) || Suid(0);

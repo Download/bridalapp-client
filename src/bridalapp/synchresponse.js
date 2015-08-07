@@ -1,4 +1,4 @@
-define(['lang/class'], function(Class){
+define(['bridalapp/class'], function(Class){
 	var SynchResponse = Class('SynchResponse', {
 		initialize: function(obj) {
 			this.createdItems = (obj && obj.createdItems) || [];

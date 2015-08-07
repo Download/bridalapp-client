@@ -1,4 +1,4 @@
-define(['lang/class'], function(Class){
+define(['bridalapp/class'], function(Class){
 	var SynchRequest = Class('SynchRequest', {
 		initialize: function(obj) {
 			this.unsynchedDuration = (obj && obj.synchDuration) || 0;

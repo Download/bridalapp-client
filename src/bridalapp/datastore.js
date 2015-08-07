@@ -1,4 +1,4 @@
-define(['lang/class'], function (Class) {
+define(['bridalapp/class'], function (Class) {
 	'use strict';
 	
 	/**

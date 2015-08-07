@@ -1,4 +1,4 @@
-define(['suid', 'lang/class', 'bridalapp/datastore'], function (Suid, Class, DataStore) {
+define(['suid', 'bridalapp/class', 'bridalapp/datastore'], function (Suid, Class, DataStore) {
 	'use strict';
 	
 	/**

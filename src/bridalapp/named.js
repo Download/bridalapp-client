@@ -1,4 +1,4 @@
-define(['lang/class', 'bridalapp/persistent'], function (Class, Persistent) {
+define(['bridalapp/class', 'bridalapp/persistent'], function (Class, Persistent) {
 	var Named = Class('Named', Persistent, {
 		initialize: function Named_initialize($super, obj) {
 			$super(obj);

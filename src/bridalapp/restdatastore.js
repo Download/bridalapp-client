@@ -1,4 +1,9 @@
-define(['lang/class', 'jquery', 'bridalapp/log', 'bridalapp/persistent', 'bridalapp/datastore'], function (Class, $, log, Persistent, DataStore) {
+define(['bridalapp/class', 
+		'jquery', 
+		'bridalapp/log', 
+		'bridalapp/persistent', 
+		'bridalapp/datastore'], 
+function (Class, $, log, Persistent, DataStore) {
 	'use strict';
 	
 	var RestDataStore = Class('RestDataStore', DataStore, {

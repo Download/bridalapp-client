@@ -1,4 +1,4 @@
-define(['lang/class', 
+define(['bridalapp/class', 
 		'jquery', 
 		'bridalapp/log', 
 		'bridalapp/persistent', 
@@ -69,15 +69,15 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 		 * meantime, or that gave (integrity constraint) validation errors,
 		 * respectively.</p> 
 		 */
-		synch: function SynchedDataStore_synch($super) {
+		synch: function SynchedDataStore_synch($super, force) {
 			if (this.cfg.autoSynch) {autoSynch(this);}
 			var me = this, cfg = me.cfg;
-			if (me.synching) {return me.synching;}
+			if ((!force) && me.synching) {return me.synching;}
 			me.synchError = false;
 			if (! cfg.remoteDataStore.cfg.supportsSynch) {return poorMansSynch(me);}
 			return me.synching = new Promise(function(resolve, reject) {
-				// if store looks synched and poll interval not expired, do nothing.
-				if (me.looksSynched() && (Date.now() < me.lastSynched().getTime() + cfg.pollInterval)) {
+				// if not forced synch and store looks synched and poll interval not expired, do nothing.
+				if ((!force) && me.looksSynched() && (Date.now() < me.lastSynched().getTime() + cfg.pollInterval)) {
 					// postpone resolving until after synch method has returned.
 					return setTimeout(function(){
 						me.synching = false;
@@ -171,6 +171,12 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 							idx = Persistent.indexOf(me.staleItems(), item);
 							if (idx === -1) {me.staleItems().push(item);}
 							else {me.staleItems().splice(idx, 1, item);}
+							idx = Persistent.indexOf(me.createdItems(), item);
+							if (idx !== -1) {me.createdItems().splice(idx, 1);}
+							idx = Persistent.indexOf(me.updatedItems(), item);
+							if (idx !== -1) {me.updatedItems().splice(idx, 1);}
+							idx = Persistent.indexOf(me.deletedItems(), item);
+							if (idx !== -1) {me.deletedItems().splice(idx, 1);}
 						}
 						log().log('Processed ' + response.staleItems.length + ' stale items.');
 					}
@@ -181,6 +187,15 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 							idx = Persistent.indexOf(me.failedItems(), item);
 							if (idx === -1) {me.failedItems().push(item);}
 							else {me.failedItems().splice(idx, 1, item);}
+							if (Persistent.indexOf(me.createdItems(), item) !== -1) {
+								// created items is a virtual array, remove from items
+								idx = Persistent.indexOf(me.items(), item);
+								if (idx !== -1) {me.items().splice(idx, 1);}
+							}
+							idx = Persistent.indexOf(me.updatedItems(), item);
+							if (idx !== -1) {me.updatedItems().splice(idx, 1);}
+							idx = Persistent.indexOf(me.deletedItems(), item);
+							if (idx !== -1) {me.deletedItems().splice(idx, 1);}
 						}
 						log().log('Processed ' + response.failedItems.length + ' failed items.');
 					}

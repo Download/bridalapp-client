@@ -1,4 +1,4 @@
-define(['lang/class',
+define(['bridalapp/class',
 		'bridalapp/datastore', 
 		'bridalapp/synchabledatastore', 
 		'bridalapp/persistent', 
