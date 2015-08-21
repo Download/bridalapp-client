@@ -39,10 +39,7 @@ module.exports = function(grunt) {
 					optimize: 'uglify2',
 					uglify2: {
 						output: {
-							beautify: true,
-						},
-						beautify: {
-							semicolons: false
+							comments: /\!\s+\[bridalapp-client/
 						},
 						mangle: {
 							except: ['$super']

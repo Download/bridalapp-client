@@ -1,6 +1,6 @@
 {
   "name": "bridalapp-client",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "BridalApp Client",
   "repository": {
     "type": "git",
@@ -12,7 +12,8 @@
     "url": "http://StijnDeWitt.com"
   },
   "contributors": [],
-  "license": "none",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
   "devDependencies": {
     "grunt": "~0.4.5",
     "load-grunt-tasks": "~1.0.0",

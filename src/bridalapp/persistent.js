@@ -15,7 +15,11 @@ define(['bridalapp/class', 'suid'], function (Class, Suid) {
 		},
 		
 		toString: function Persistent_toString() {
-			return '[Object ' + this.type + ' ' + this.id.toString() + ' v' + this.version + ']';
+			return '[Object ' + this.type + ' ' + this.toStringProperties() + ']';
+		},
+		
+		toStringProperties: function Persistent_toStringProperties() {
+			return this.id.toString() + ' v' + this.version
 		}
 	});
 	

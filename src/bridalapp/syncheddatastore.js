@@ -149,7 +149,9 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 								else {me.items().push(item);}
 							}
 						}
-						log().log('Processed ' + response.updatedItems.length + ' updated items.');
+						if (response.updatedItems.length) {
+							log().log('Processed ' + response.updatedItems.length + ' updated items.');
+						}
 					}
 
 					// handle created items
@@ -162,7 +164,9 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 							}
 							else {me.items().splice(idx, 1, item);}
 						}
-						log().log('Processed ' + response.createdItems.length + ' created items.');
+						if (response.createdItems.length) {
+							log().log('Processed ' + response.createdItems.length + ' created items.');
+						}
 					}
 
 					// handle stale items
@@ -178,7 +182,9 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 							idx = Persistent.indexOf(me.deletedItems(), item);
 							if (idx !== -1) {me.deletedItems().splice(idx, 1);}
 						}
-						log().log('Processed ' + response.staleItems.length + ' stale items.');
+						if (response.staleItems.length) { 
+							log().log('Processed ' + response.staleItems.length + ' stale items.');
+						}
 					}
 
 					if (response.failedItems.length) {

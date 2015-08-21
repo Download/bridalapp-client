@@ -5,6 +5,10 @@ define(['bridalapp/class', 'bridalapp/persistent'], function(Class, Persistent){
 			this.productId = (obj && obj.productId) || null;
 			this.accountId = (obj && obj.accountId) || null;
 			this.score = (obj && obj.score) || null;
+		},
+	
+		toStringProperties: function($super) {
+			return $super() + ' ' + this.score + ' ' + this.productId
 		}
 	});
 

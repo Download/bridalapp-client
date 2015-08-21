@@ -1,7 +1,5 @@
-/**!
- * @copyright (c) 2015 by Stijn de Witt. Some rights reserved.
- * @license <a href="https://creativecommons.org/licenses/by/4.0/">Attribution 4.0 International (CC BY 4.0)</a> 
- */
+/*! 
+[bridalapp-client 0.9.4](http://github.com/download/bridalapp-client). Copyright 2015 by [Stijn de Witt](http://StijnDeWitt.com). Some rights reserved. License: [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) */
 define([
 		'bridalapp/rhaboodatastore',
 		'bridalapp/restdatastore',
