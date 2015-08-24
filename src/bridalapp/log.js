@@ -6,7 +6,7 @@ define([], function () {
 		i, key;
 
 	for (i=0; key=METHODS[i]; i++) {
-		nul[key] = function(){}
+		nul[key] = function(){};
 		con[key] = out[key] || nul[key];
 	}
 
@@ -32,7 +32,7 @@ define([], function () {
 	log.level.ERROR = 3;
 	log.level.NONE = 4;
 	
-	var logLevel = log.level.DEBUG;
+	var logLevel = log.level(log.level.INFO);
 
 	return log;
 });

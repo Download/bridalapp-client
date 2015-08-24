@@ -1,14 +1,16 @@
 define(['bridalapp/class',
+		'bridalapp/log',
 		'bridalapp/datastore', 
 		'bridalapp/synchabledatastore', 
 		'bridalapp/persistent', 
 		'rhaboo'], 
-function (Class, DataStore, SynchableDataStore, Persistent) {
+function (Class, log, DataStore, SynchableDataStore, Persistent) {
 	'use strict';
 	
 	var RhabooDataStore = Class('RhabooDataStore', SynchableDataStore, {
 
 		initialize: function RhabooDataStore_initialize($super, name, url, cfg) {
+			log().log('Initializing RhabooDataStore `' + name + '`...');
 			$super(name, url, cfg);
 			if (!this.cfg.rhaboo || !this.cfg.store) { 
 				var repoIdx = url.indexOf('://') + 3,
@@ -18,6 +20,7 @@ function (Class, DataStore, SynchableDataStore, Persistent) {
 				if (!this.cfg.repo) {this.cfg.repo = repo;}
 				if (!this.cfg.store) {this.cfg.store = store;}
 			}
+			log().log('Initialized RhabooDataStore `' + name + '`.');
 		},
 		
 		/**
@@ -35,9 +38,11 @@ function (Class, DataStore, SynchableDataStore, Persistent) {
 		 *         possibly empty but never <code>null</code> or <code>undefined</code>.
 		 */
 		load: function DataStore_load(criteria, pageSize, pageIndex) {
+			log().log('Loading RhabooDataStore `' + name + '`...');
 			var store = this;
 			return new Promise(function(resolve){
-				resolve(this.get(criteria, pageSize, pageIndex));
+				resolve(store.get(criteria, pageSize, pageIndex));
+				log().log('Loaded RhabooDataStore `' + name + '`.');
 			});
 		},
 		
@@ -57,8 +62,11 @@ function (Class, DataStore, SynchableDataStore, Persistent) {
 		 *         possibly empty but never <code>null</code> or <code>undefined</code>.
 		 */
 		count: function DataStore_count(criteria) {
+			log().log('RhabooDataStore `' + name + '` count() starting (criteria=' + criteria + ')...');
+			var store = this;
 			return new Promise(function(resolve){
-				resolve(this.len());
+				resolve(store.len());
+				log().log('RhabooDataStore `' + name + '` count() done: ' + store.len() + '.');
 			});
 		},
 		
@@ -108,8 +116,11 @@ function (Class, DataStore, SynchableDataStore, Persistent) {
 		 *         or changed. Possibly empty but never <code>null</code> or <code>undefined</code>.
 		 */
 		save: function DataStore_save(item) {
+			log().log('RhabooDataStore `' + name + '` save() starting (item=' + item + ')...');
+			var store = this;
 			return new Promise(function(resolve){
-				resolve(this.set(item));
+				resolve(store.set(item));
+				log().log('RhabooDataStore `' + name + '` save() done.');
 			});
 		},
 
@@ -126,12 +137,16 @@ function (Class, DataStore, SynchableDataStore, Persistent) {
 		 * @return An 'immutable' array of items that were removed. Possibly empty but never <code>null</code>.
 		 */
 		delete: function DataStore_delete(item) {
+			log().log('RhabooDataStore `' + name + '` delete() starting (item=' + item + ')...');
+			var store = this;
 			return new Promise(function(resolve){
-				resolve(this.del(item));
+				resolve(store.del(item));
+				log().log('RhabooDataStore `' + name + '` delete() done.');
 			});
 		},
 		
 		set: function RhabooDataStore_set(item) {
+			log().log('RhabooDataStore `' + name + '` set() starting (item=' + item + ')...');
 			var results = Persistent.eachArg(arguments, this, function(item) {
 				var backup = null,
 					idx = Persistent.indexOf(this.db().items, item);
@@ -157,11 +172,14 @@ function (Class, DataStore, SynchableDataStore, Persistent) {
 				}
 				return [item];
 			});
+			log().log('RhabooDataStore `' + name + '` set(): triggering change event.');
 			this.trigger('change');
+			log().log('RhabooDataStore `' + name + '` set(): done.');
 			return results;
 		},
 
 		del: function RhabooDataStore_del(item) {
+			log().log('RhabooDataStore `' + name + '` del() starting (item=' + item + ')...');
 			var results = Persistent.eachArg(arguments, this, function(item) {
 				var backup, idx = Persistent.indexOf(this.items(), item);
 				if (idx !== -1) {backup = this.items().splice(idx, 1)[0];}
@@ -181,7 +199,9 @@ function (Class, DataStore, SynchableDataStore, Persistent) {
 				}
 				return [backup || item];
 			});
+			log().log('RhabooDataStore `' + name + '` del(): triggering change event.');
 			this.trigger('change');
+			log().log('RhabooDataStore `' + name + '` del(): done.');
 			return results;
 		},
 		

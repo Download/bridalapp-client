@@ -13,6 +13,7 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 	var SynchedDataStore = Class('SynchedDataStore', SynchableDataStore, {
 		
 		initialize: function SynchedDataStore_initialize($super, name, url, cfg) {
+			log().log('Initializing SynchedDataStore `' + name + '`...');
 			$super(name, url, cfg);
 			this.synching = false;
 			this.synchError = false;
@@ -57,6 +58,7 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 					}
 				}
 			}
+			log().log('Initialized SynchedDataStore `' + name + '`.');
 		},
 
 		/** 
@@ -72,7 +74,7 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 		synch: function SynchedDataStore_synch($super, force) {
 			if (this.cfg.autoSynch) {autoSynch(this);}
 			var me = this, cfg = me.cfg;
-			if ((!force) && me.synching) {return me.synching;}
+			if (me.synching) {return me.synching;}
 			me.synchError = false;
 			if (! cfg.remoteDataStore.cfg.supportsSynch) {return poorMansSynch(me);}
 			return me.synching = new Promise(function(resolve, reject) {
@@ -86,139 +88,157 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 				}
 				
 				// synching is needed
-				me.trigger('synch:started');
-				var changed = false;
-				var req = new SynchRequest();
-				req.criteria = cfg.filter || null;
-				req.createdItems.push.apply(req.createdItems, me.createdItems());
-				req.updatedItems.push.apply(req.updatedItems, me.updatedItems());
-				req.deletedItems.push.apply(req.deletedItems, me.deletedItems());
-				req.currentIds.push.apply(req.currentIds, Persistent.pluck(me.items(), 'id'));
-				req.currentVersions.push.apply(req.currentVersions, Persistent.pluck(me.items(), 'version'));
+				try {
+					log().log('Synching SynchedDataStore `' + this.name + '`...');
+					me.trigger('synch:started');
+					var changed = false;
+					var req = new SynchRequest();
+					req.criteria = cfg.filter || null;
+					req.createdItems.push.apply(req.createdItems, me.createdItems());
+					req.updatedItems.push.apply(req.updatedItems, me.updatedItems());
+					req.deletedItems.push.apply(req.deletedItems, me.deletedItems());
+					req.currentIds.push.apply(req.currentIds, Persistent.pluck(me.items(), 'id'));
+					req.currentVersions.push.apply(req.currentVersions, Persistent.pluck(me.items(), 'version'));
+	
+					log().log('SynchedDataStore `' + me.name + '` synching with remote datastore ' + cfg.remoteDataStore + '...');
+					cfg.remoteDataStore.synch(req).then(function(response) {
+						log().log('SynchedDataStore `' + me.name + '` synched with remote datastore. Processing response ' + response + '...');
 
-				cfg.remoteDataStore.synch(req).then(function(response) {
-					var i,id,idx,item;
-
-					// handle deleted items
-					if (response.deletedIds.length) {
-						for (i=0; id=response.deletedIds[i]; i++) {
-							idx = Persistent.indexOf(me.items(), id);
-							if (idx !== -1) {
-								me.items().splice(idx, 1);
-								changed = true;
+						var i,id,idx,item;
+						
+						// handle deleted items
+						if (response.deletedIds.length) {
+							for (i=0; id=response.deletedIds[i]; i++) {
+								idx = Persistent.indexOf(me.items(), id);
+								if (idx !== -1) {
+									me.items().splice(idx, 1);
+									changed = true;
+								}
+								idx = Persistent.indexOf(me.deletedItems(), id);
+								if (idx !== -1) {me.deletedItems().splice(idx, 1);}
 							}
-							idx = Persistent.indexOf(me.deletedItems(), id);
-							if (idx !== -1) {me.deletedItems().splice(idx, 1);}
+							log().log('Processed ' + response.deletedIds.length + ' deleted items.');
 						}
-						log().log('Processed ' + response.deletedIds.length + ' deleted items.');
-					}
-
-					// handle updated items
-					if (response.updatedItems.length) {
-						for (i=0; item=response.updatedItems[i]; i++) {
-							// if we have futureItems, try to merge the changes into the new version of the item
-							idx = Persistent.indexOf(me.futureItems(), item)
-							if (idx !== -1) {
-								// get future item and remove from list
-								var future = me.futureItems().splice(idx, 1)[0];
-								// replace updated item with version from server
-								idx = Persistent.indexOf(me.updatedItems(), item);
-								if (idx !== -1) {me.updatedItems().splice(idx, 1, item);}
-								else {me.updatedItems().push(item);}
-								// now merge changes from future item onto server item
-								var merged = Persistent.clone(item);
-								for (var key in future) {
-									if (key !== 'version') {
-										merged[key] = future[key]; 
+	
+						// handle updated items
+						if (response.updatedItems.length) {
+							for (i=0; item=response.updatedItems[i]; i++) {
+								// if we have futureItems, try to merge the changes into the new version of the item
+								idx = Persistent.indexOf(me.futureItems(), item)
+								if (idx !== -1) {
+									// get future item and remove from list
+									var future = me.futureItems().splice(idx, 1)[0];
+									// replace updated item with version from server
+									idx = Persistent.indexOf(me.updatedItems(), item);
+									if (idx !== -1) {me.updatedItems().splice(idx, 1, item);}
+									else {me.updatedItems().push(item);}
+									// now merge changes from future item onto server item
+									var merged = Persistent.clone(item);
+									for (var key in future) {
+										if (key !== 'version') {
+											merged[key] = future[key]; 
+										}
+									}
+									// replace item with the merged version
+									idx = Persistent.indexOf(me.items(), item);
+									if (idx !== -1) {
+										me.items().splice(idx, 1, merged);
 									}
 								}
-								// replace item with the merged version
-								idx = Persistent.indexOf(me.items(), item);
-								if (idx !== -1) {
-									me.items().splice(idx, 1, merged);
+								else {
+									// remove saved item from the updatedItems list
+									idx = Persistent.indexOf(me.updatedItems(), item);
+									if (idx !== -1) {me.updatedItems().splice(idx, 1);}
+									else {changed = true;}
+									// replace item with the saved version
+									idx = Persistent.indexOf(me.items(), item);
+									if (idx !== -1) {me.items().splice(idx, 1, item);}
+									else {me.items().push(item);}
 								}
 							}
-							else {
-								// remove saved item from the updatedItems list
-								idx = Persistent.indexOf(me.updatedItems(), item);
-								if (idx !== -1) {me.updatedItems().splice(idx, 1);}
-								else {changed = true;}
-								// replace item with the saved version
-								idx = Persistent.indexOf(me.items(), item);
-								if (idx !== -1) {me.items().splice(idx, 1, item);}
-								else {me.items().push(item);}
+							if (response.updatedItems.length) {
+								log().log('Processed ' + response.updatedItems.length + ' updated items.');
 							}
 						}
-						if (response.updatedItems.length) {
-							log().log('Processed ' + response.updatedItems.length + ' updated items.');
-						}
-					}
-
-					// handle created items
-					if (response.createdItems.length) {
-						for (i=0; item=response.createdItems[i]; i++) {
-							idx = Persistent.indexOf(me.items(), item);
-							if (idx === -1) {
-								me.items().push(item);
-								changed = true;
-							}
-							else {me.items().splice(idx, 1, item);}
-						}
+	
+						// handle created items
 						if (response.createdItems.length) {
+							for (i=0; item=response.createdItems[i]; i++) {
+								idx = Persistent.indexOf(me.items(), item);
+								if (idx === -1) {
+									me.items().push(item);
+									changed = true;
+								}
+								else {me.items().splice(idx, 1, item);}
+							}
 							log().log('Processed ' + response.createdItems.length + ' created items.');
 						}
-					}
-
-					// handle stale items
-					if (response.staleItems.length) {
-						for (i=0; item=response.staleItems[i]; i++) {
-							idx = Persistent.indexOf(me.staleItems(), item);
-							if (idx === -1) {me.staleItems().push(item);}
-							else {me.staleItems().splice(idx, 1, item);}
-							idx = Persistent.indexOf(me.createdItems(), item);
-							if (idx !== -1) {me.createdItems().splice(idx, 1);}
-							idx = Persistent.indexOf(me.updatedItems(), item);
-							if (idx !== -1) {me.updatedItems().splice(idx, 1);}
-							idx = Persistent.indexOf(me.deletedItems(), item);
-							if (idx !== -1) {me.deletedItems().splice(idx, 1);}
-						}
-						if (response.staleItems.length) { 
+	
+						// handle stale items
+						if (response.staleItems.length) {
+							for (i=0; item=response.staleItems[i]; i++) {
+								idx = Persistent.indexOf(me.staleItems(), item);
+								if (idx === -1) {me.staleItems().push(item);}
+								else {me.staleItems().splice(idx, 1, item);}
+								idx = Persistent.indexOf(me.createdItems(), item);
+								if (idx !== -1) {me.createdItems().splice(idx, 1);}
+								idx = Persistent.indexOf(me.updatedItems(), item);
+								if (idx !== -1) {me.updatedItems().splice(idx, 1);}
+								idx = Persistent.indexOf(me.deletedItems(), item);
+								if (idx !== -1) {me.deletedItems().splice(idx, 1);}
+							}
 							log().log('Processed ' + response.staleItems.length + ' stale items.');
 						}
-					}
-
-					if (response.failedItems.length) {
-						// handle failed items
-						for (i=0; item=response.failedItems[i]; i++) {
-							idx = Persistent.indexOf(me.failedItems(), item);
-							if (idx === -1) {me.failedItems().push(item);}
-							else {me.failedItems().splice(idx, 1, item);}
-							if (Persistent.indexOf(me.createdItems(), item) !== -1) {
-								// created items is a virtual array, remove from items
-								idx = Persistent.indexOf(me.items(), item);
-								if (idx !== -1) {me.items().splice(idx, 1);}
+	
+						if (response.failedItems.length) {
+							// handle failed items
+							for (i=0; item=response.failedItems[i]; i++) {
+								idx = Persistent.indexOf(me.failedItems(), item);
+								if (idx === -1) {me.failedItems().push(item);}
+								else {me.failedItems().splice(idx, 1, item);}
+								if (Persistent.indexOf(me.createdItems(), item) !== -1) {
+									// created items is a virtual array, remove from items
+									idx = Persistent.indexOf(me.items(), item);
+									if (idx !== -1) {me.items().splice(idx, 1);}
+								}
+								idx = Persistent.indexOf(me.updatedItems(), item);
+								if (idx !== -1) {me.updatedItems().splice(idx, 1);}
+								idx = Persistent.indexOf(me.deletedItems(), item);
+								if (idx !== -1) {me.deletedItems().splice(idx, 1);}
 							}
-							idx = Persistent.indexOf(me.updatedItems(), item);
-							if (idx !== -1) {me.updatedItems().splice(idx, 1);}
-							idx = Persistent.indexOf(me.deletedItems(), item);
-							if (idx !== -1) {me.deletedItems().splice(idx, 1);}
+							log().log('Processed ' + response.failedItems.length + ' failed items.');
 						}
-						log().log('Processed ' + response.failedItems.length + ' failed items.');
-					}
-
-					me.lastSynched(new Date());
-					me.synching = false;
-					if (changed) {me.trigger('change');} 
-					me.trigger('synch:success');
-					resolve();
-					me.trigger('synch:done');
-				}).catch(function(e){
+	
+						me.lastSynched(new Date());
+						me.synching = false;
+						log().log('SynchedDataStore `' + me.name + '` synched.');
+						if (changed) {
+							log().log('SynchedDataStore `' + me.name + '` changed. Triggering change...');
+							me.trigger('change');
+						} 
+						log().log('SynchedDataStore `' + me.name + '` triggering success....');
+						me.trigger('synch:success');
+						resolve();
+						log().log('SynchedDataStore `' + me.name + '` triggering done....');
+						me.trigger('synch:done');
+						log().log('SynchedDataStore `' + me.name + '` synch done.');
+					}).catch(function(e){
+						log().log('SynchedDataStore `' + me.name + '` synch error:' + e);
+						me.synching = false;
+						me.synchError = e;
+						me.trigger('synch:failed');
+						reject(e);
+						me.trigger('synch:done');
+					});
+				}
+				catch(e) {
+					log().log('SynchedDataStore `' + me.name + '` synch error:' + e);
 					me.synching = false;
 					me.synchError = e;
 					me.trigger('synch:failed');
 					reject(e);
 					me.trigger('synch:done');
-				});
+				}
 			});
 		},
 		
