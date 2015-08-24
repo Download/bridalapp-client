@@ -89,7 +89,7 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 				
 				// synching is needed
 				try {
-					log().log('Synching SynchedDataStore `' + this.name + '`...');
+					log().log('Synching SynchedDataStore `' + me.name + '`...');
 					me.trigger('synch:started');
 					var changed = false;
 					var req = new SynchRequest();
