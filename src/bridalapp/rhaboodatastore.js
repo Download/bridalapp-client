@@ -253,7 +253,16 @@ function (Class, log, DataStore, SynchableDataStore, Persistent) {
 		
 		db: function RhabooDataStore_db() {
 			if (! this.cfg.rhaboo) {
-				this.cfg.rhaboo = Rhaboo.persistent(this.cfg.repo);
+				try {
+					this.cfg.rhaboo = Rhaboo.persistent(this.cfg.repo);
+				}
+				catch(e) {
+					log().warn('Unable to (re-)construct DB for RhabooDataStore `' + this.name + '`... Wiping (probably corrupt) localStorage');
+					// could not (re-)construct Rhaboo, probably due to corrupt storage
+					// wipe storage and retry
+					localStorage.clear();
+					this.cfg.rhaboo = Rhaboo.persistent(this.cfg.repo);
+				}
 				if (! this.cfg.rhaboo[this.cfg.store]) {this.cfg.rhaboo.write(this.cfg.store, {});}
 				for (var i=0,key; key=['items', 'updated', 'deleted', 'stale', 'failed', 'future'][i]; i++) {
 					if (! this.db()[key]) {this.db().write(key, []);}
