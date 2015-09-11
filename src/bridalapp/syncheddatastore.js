@@ -23,7 +23,6 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 			if (!cfg.pollInterval) {cfg.pollInterval = 60 * 60 * 1000;} // 60 min.
 			if (cfg.remoteSynch === undefined) {cfg.remoteSynch = true;}
 			if ((! cfg.localDataStore) || (! cfg.remoteDataStore)) {
-				// url: 'synched://rhaboo/bridal-app/ratings#http/api/ratings'
 				var urls = url.split('://')[1].split('#');
 				if (! cfg.localDataStore) {
 					var localParts=urls[0].split('/'), 

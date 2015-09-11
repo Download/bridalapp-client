@@ -1,9 +1,9 @@
 define(['bridalapp/class', 'bridalapp/named'], function(Class, Named){
-	var Product = Class('Product', Named, {
+	var Store = Class('Store', Named, {
 		initialize: function($super, obj) {
 			$super(obj);
 		}
 	});
 	
-	return Product;
+	return Store;
 });

@@ -1,8 +1,8 @@
 define(['bridalapp/class', 'bridalapp/persistent'], function (Class, Persistent) {
 	var Named = Class('Named', Persistent, {
 		initialize: function Named_initialize($super, obj) {
+			this.name = '';
 			$super(obj);
-			this.name = (obj && obj.name) || null;
 		},
 		
 		toString: function Named_toString() {

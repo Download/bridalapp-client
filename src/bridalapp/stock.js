@@ -4,12 +4,12 @@ define(['bridalapp/class',
 		'bridalapp/restdatastore',
 ], 
 function (Class, SynchedDataStore) {
-	var Products = Class('Products', SynchedDataStore, {
-		initialize: function Products_initialize($super) {
-			$super('products', 'synched://local/bridal-app/products#http/api/products');
+	var Stock = Class('Stock', SynchedDataStore, {
+		initialize: function Stock_initialize($super) {
+			$super('stock', 'synched://local/bridal-app/stock#http/api/stock');
 			this.cfg.remoteDataStore.cfg.supportsSynch = true;
 		}
 	});
 
-	return new Products();
+	return new Stock();
 });

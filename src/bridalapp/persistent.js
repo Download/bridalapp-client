@@ -1,9 +1,20 @@
 define(['bridalapp/class', 'suid'], function (Class, Suid) {
 	var Persistent = Class('Persistent', {
 		initialize: function Persistent_initialize(obj) {
-			this.id = (obj && obj.id) || Suid(0);
 			this.type = this.constructor.classname;
-			this.version = obj && (obj.version !== undefined) ? obj.version : null;
+			this.id = Suid(0);
+			this.version = null;
+			for (var key in obj) {
+				if (typeof key !== 'function') {
+					this.addProp(key, obj[key]);
+				}
+			}
+		},
+		
+		addProp: function Persistent_addProp(name, value, def) {
+			if ((value !== undefined) || (def !== undefined)) {
+				this[name] = value !== undefined ? value : def;
+			}
 		},
 		
 		equals: function Persistent_equals(other){

@@ -1,12 +1,12 @@
 define(['bridalapp/class', 
 		'bridalapp/syncheddatastore',
-		'bridalapp/rhaboodatastore', 
+		'bridalapp/localdatastore', 
 		'bridalapp/restdatastore',
 ],
 function (Class, SynchedDataStore) {
 	var Brands = Class('Brands', SynchedDataStore, {
 		initialize: function Brands_initialize($super) {
-			$super('brands', 'synched://rhaboo/bridal-app/brands#http/api/brands');
+			$super('brands', 'synched://local/bridal-app/brands#http/api/brands');
 		}
 	});
 
