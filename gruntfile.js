@@ -30,6 +30,7 @@ module.exports = function(grunt) {
 					baseUrl: 'src/',
 					paths: {
 						'suid': 'empty:',
+						'memorystorage': 'empty:',
 						'jquery': 'empty:',
 						'rhaboo': 'empty:'
 					},

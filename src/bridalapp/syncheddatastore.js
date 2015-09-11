@@ -19,8 +19,8 @@ function (Class, $, log, Persistent, DataStore, SynchableDataStore, SynchRequest
 			this.synchError = false;
 			cfg = this.cfg;
 			if (cfg.autoSynch === undefined) {cfg.autoSynch = true;}
-			if (!cfg.synchInterval) {cfg.synchInterval = 30 * 1000;}    // 30 sec.
-			if (!cfg.pollInterval) {cfg.pollInterval = 60 * 60 * 1000;} // 60 min.
+			if (!cfg.synchInterval) {cfg.synchInterval = 15 * 1000;}    // 15 sec.
+			if (!cfg.pollInterval) {cfg.pollInterval = 15 * 60 * 1000;} // 15 min.
 			if (cfg.remoteSynch === undefined) {cfg.remoteSynch = true;}
 			if ((! cfg.localDataStore) || (! cfg.remoteDataStore)) {
 				var urls = url.split('://')[1].split('#');
