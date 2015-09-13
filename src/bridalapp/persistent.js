@@ -84,8 +84,13 @@ define(['bridalapp/class', 'suid'], function (Class, Suid) {
 			for (var i=results.length-1; i>=0; i--) {
 				for (var key in criteria) {
 					if (criteria.hasOwnProperty(key)) {
-						if ((((Array.isArray && Array.isArray(criteria[key])) || (criteria[key] instanceof Array)) && (Persistent.indexOf(criteria[key], items[i][key]) === -1)) 
-								|| (! Persistent.equals(items[i][key], criteria[key]))) {
+						if ((Array.isArray && Array.isArray(criteria[key])) || (criteria[key] instanceof Array)) {
+							if (Persistent.indexOf(criteria[key], items[i][key]) === -1) {
+								results.splice(i,1);
+								break;
+							}
+						}
+						else if (! Persistent.equals(items[i][key], criteria[key])) {
 							results.splice(i,1);
 							break;
 						}
