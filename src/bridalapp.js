@@ -26,7 +26,7 @@ define([
 		'bridalapp/store',
 		'bridalapp/stores'
 	], 
-	
+
 function(
 	LocalDataStore,
 	RestDataStore,
@@ -54,6 +54,10 @@ function(
 ){
 	// Create a namespace with all classes in it and return it
 	return {
+		STATIC: 'https://cdn.rawgit.com/download/bridalapp-static/0.9.6',
+//		APIKEY: 'AIzaSyDRiYJW2n0wN1-H06fYmAza3EvsaDTLoEg', // DEVELOPMENT
+		APIKEY: 'AIzaSyB75slLBHVw8DPQRRyYq6ZDjNuml3ZB_a4', // PRODUCTION
+
 		Account: Account, 
 		Brand: Brand,
 		Brands: Brands,
@@ -75,7 +79,7 @@ function(
 		Stock: Stock,
 		Store: Store,
 		Stores: Stores,
-		
+
 		globalize: function(global){
 			for (var key in this) {
 				if (this.hasOwnProperty(key) && (key !== 'globalize')) {
