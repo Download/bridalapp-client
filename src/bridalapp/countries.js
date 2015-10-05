@@ -270,10 +270,16 @@ define(['bridalapp/class', 'bridalapp/country'], function(Class, Country){
 			while(i < this.items.length) {
 				var mine = this.items[i][prop];
 				if (typeof mine === 'string') {
-					if (!caseSensitive) {mine = mine.toLowerCase();}
-					if (mine.indexOf(value === 0)) {break;}
+					if (!caseSensitive) {
+						mine = mine.toLowerCase();
+					}
+					if (mine.indexOf(value) === 0) {
+						break;
+					}
 				}
-				if (mine === value) {break;}
+				if (mine === value) {
+					break;
+				}
 				i++; // skip until we found first item
 			}
 			while (i < this.items.length) {
@@ -281,12 +287,12 @@ define(['bridalapp/class', 'bridalapp/country'], function(Class, Country){
 				var mine = this.items[i][prop];
 				if (typeof mine === 'string') {
 					if (!caseSensitive) {mine = mine.toLowerCase();}
-					if (mine.indexOf(value === 0)) {
-						results.push(mine);
+					if (mine.indexOf(value) === 0) {
+						results.push(this.items[i]);
 					}
 					else {break;}
 				} else if (mine === value) {
-					results.push(mine);
+					results.push(this.items[i]);
 				}
 				else {break;}
 				i++;

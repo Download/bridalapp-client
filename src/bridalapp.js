@@ -1,5 +1,5 @@
 /*! 
-[bridalapp-client 0.9.9](http://github.com/download/bridalapp-client). Copyright 2015 by [Stijn de Witt](http://StijnDeWitt.com). Some rights reserved. License: [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) */
+[bridalapp-client 0.9.11](http://github.com/download/bridalapp-client). Copyright 2015 by [Stijn de Witt](http://StijnDeWitt.com). Some rights reserved. License: [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) */
 define([
 		'bridalapp/localdatastore',
 		'bridalapp/restdatastore',
