@@ -1,5 +1,5 @@
 /*! 
-[bridalapp-client 0.9.12](http://github.com/download/bridalapp-client). Copyright 2015 by [Stijn de Witt](http://StijnDeWitt.com). Some rights reserved. License: [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) */
+[bridalapp-client 0.9.13](http://github.com/download/bridalapp-client). Copyright 2015 by [Stijn de Witt](http://StijnDeWitt.com). Some rights reserved. License: [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) */
 define([
 		'bridalapp/localdatastore',
 		'bridalapp/restdatastore',
@@ -54,8 +54,7 @@ function(
 ){
 	// Create a namespace with all classes in it and return it
 	return {
-		STATIC: 'https://cdn.rawgit.com/download/bridalapp-static/0.9.7',
-//		APIKEY: 'AIzaSyDRiYJW2n0wN1-H06fYmAza3EvsaDTLoEg', // DEVELOPMENT
+		STATIC: 'https://cdn.rawgit.com/download/bridalapp-static/0.9.8',
 		APIKEY: 'AIzaSyB75slLBHVw8DPQRRyYq6ZDjNuml3ZB_a4', // PRODUCTION
 
 		Account: Account, 
