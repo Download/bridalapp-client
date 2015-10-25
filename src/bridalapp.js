@@ -54,7 +54,7 @@ function(
 ){
 	// Create a namespace with all classes in it and return it
 	return {
-		STATIC: 'https://cdn.rawgit.com/download/bridalapp-static/0.9.9',
+		STATIC: 'https://cdn.rawgit.com/download/bridalapp-static/0.9.10',
 		APIKEY: 'AIzaSyB75slLBHVw8DPQRRyYq6ZDjNuml3ZB_a4', // PRODUCTION
 
 		Account: Account, 
