@@ -1,6 +1,6 @@
 {
   "name": "bridalapp-client",
-  "version": "0.9.20",
+  "version": "0.10.0",
   "description": "BridalApp Client",
   "repository": {
     "type": "git",
@@ -14,12 +14,70 @@
   "contributors": [],
   "license": "CC-BY-4.0",
   "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "scripts": {
+    "build-js-old": "browserify -t [babelify] src/index.jsx > dist/bundle.js",
+    "build-js": "browserify src/index.jsx > dist/bundle.js",
+    "build": "npm run build-js"
+  },
+  "browser": {
+    "react": "react",
+    "immutable": "immutable"
+  },
+  "browserify": {
+    "basedir": "src",
+    "extensions": [
+      ".jsx"
+    ],
+    "entry": [
+      "src/index.jsx"
+    ],
+    "transform": [
+      "babelify",
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "immutable": "global:Immutable",
+    "react": "global:React",
+    "react-dom": {
+      "exports": "global:ReactDOM",
+      "depends": [
+        "react:React"
+      ]
+    },
+    "morearty": {
+      "exports": "Morearty",
+      "depends": [
+        "react:React",
+        "immutable:Immutable"
+      ]
+    }
+  },
+  "disabled-devDependencies": {
+    "babel-preset-es2015": "^6.1.2",
+    "babel-preset-react": "^6.1.2",
+    "babelify": "^7.2.0"
+  },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "load-grunt-tasks": "~1.0.0",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-uglify": "~0.6.0",
-    "grunt-jsdoc": "~0.6.7",
-    "grunt-contrib-requirejs": "~0.4.4"
+    "babelify": "^6.4.0",
+    "browserify": "^12.0.1",
+    "browserify-shim": "^3.8.11",
+    "gulp": "^3.9.0",
+    "gulp-notify": "^2.2.0",
+    "react-tap-event-plugin": "^0.2.1",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.6.0"
+  },
+  "dependencies": {
+    "history": "^1.13.0",
+    "immutable": "^3.7.5",
+    "material-ui": "^0.13.2",
+    "morearty": "^0.7.25",
+    "picolog": "^0.6.0",
+    "react-dom": "^0.14.2",
+    "react-mixin": "^3.0.3",
+    "react-router": "^1.0.0",
+    "webdb": "^0.5.0",
+    "ws.suid": "^0.9.16"
   }
 }
