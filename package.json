@@ -59,25 +59,25 @@
     "babelify": "^7.2.0"
   },
   "devDependencies": {
-    "babelify": "^6.4.0",
-    "browserify": "^12.0.1",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
     "browserify-shim": "^3.8.11",
     "gulp": "^3.9.0",
     "gulp-notify": "^2.2.0",
-    "react-tap-event-plugin": "^0.2.1",
+    "react-tap-event-plugin": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.6.0"
   },
   "dependencies": {
-    "history": "^1.13.0",
+    "history": "^4.4.0",
     "immutable": "^3.7.5",
-    "material-ui": "^0.13.2",
+    "material-ui": "^0.16.2",
     "morearty": "^0.7.25",
-    "picolog": "^0.6.0",
-    "react-dom": "^0.14.2",
+    "picolog": "^1.0.4",
+    "react-dom": "^15.4.0",
     "react-mixin": "^3.0.3",
-    "react-router": "^1.0.0",
+    "react-router": "^3.0.0",
     "webdb": "^0.5.0",
-    "ws.suid": "^0.9.16"
+    "ws.suid": "^0.10.1"
   }
 }
