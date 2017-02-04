@@ -1,5 +1,7 @@
 ﻿# bridalapp-client
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Download/bridalapp-client.svg)](https://greenkeeper.io/)
+
 Find your wedding dress with [Bridal App](https://bridalapp.com).
 
 Finden Sie Ihr Hochzeitskleid mit [Bridal App](https://bridalapp.com).
